@@ -21,6 +21,7 @@ booktitle = {Proceedings of the ACM Multimedia Systems Conference 2026},
 pages = {409–415},
 numpages = {7},
 keywords = {Augmented Reality, Robot Teleoperation, Human-Robot Interaction},
+location = {},
 series = {MMSys '26}
 }
 ```

@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="ARBot: A High-Fidelity Robotic Manipulator Teleoperation Framework for Human-Centered Augmented Reality Evaluation">
+  <meta name="keywords" content="ARBot, Augmented Reality, Robot Teleoperation, Human-Robot Interaction, WPI">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARBot: A High-Fidelity Robotic Manipulator Teleoperation Framework</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics (Replace with your own or remove) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  
+  <!-- Replaced local fontawesome CSS with CDN to fix missing webfonts 404 errors -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  
+  <!-- Replaced local fontawesome JS with CDN to match the CSS version -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+  
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  
+  <!-- Add Plotly.js for Interactive Trajectory Graph -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  
+  <style>
+      /* Global Typography and Formatting Enhancements */
+      body {
+          font-family: 'Noto Sans', sans-serif;
+          color: #363636;
+      }
+      
+      h1, h2, h3, h4, h5, h6, .title, .subtitle {
+          font-family: 'Google Sans', sans-serif;
+      }
+
+      .content p {
+          font-size: 1.1rem;
+          line-height: 1.6;
+      }
+
+      .plot-container {
+          height: 220px;
+          width: 100%;
+          border: 1px solid #e0e0e0;
+          border-radius: 6px;
+          background-color: #fcfcfc;
+      }
+      
+      .grid-title {
+          font-family: 'Google Sans', sans-serif;
+          font-weight: bold;
+          margin-bottom: 0.5rem;
+      }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://sites.google.com/view/harshchhajed"> <!-- Link to your personal site if applicable -->
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://github.com/cake-lab">
+            Other WPI AR Projects
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">ARBot: A High-Fidelity Robotic Manipulator Teleoperation Framework for Human-Centered Augmented Reality Evaluation</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="#">Harsh Chhajed</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="#">Dr. Tian Guo</a><sup>1</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Worcester Polytechnic Institute, Worcester, MA, USA</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://dl.acm.org/doi/10.1145/3793853.3799807"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- arXiv Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2602.06273v1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/cake-lab/ARBot"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://drive.google.com/drive/folders/1G7c1eUC-Iz520lqaE077X5Flvq8blLnZ?usp=drive_link"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Dataset</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body" style="padding-bottom: 1.5rem;">
+      <h2 class="subtitle is-size-4 is-italic has-text-centered has-text-weight-normal" style="line-height: 1.5; color: #4a4a4a;">
+        <span class="dnerf has-text-weight-bold">ARBot</span> translates unpredictable human motion into precise, highly repeatable ground-truth robotic movement via multimodal capture interfaces and a proactively-safe QP controller.
+      </h2>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 1.5rem;">
+  <div class="container is-max-desktop">
+    <!-- Consolidated Abstract & Motivation -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-12">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            <strong>The Evaluation Bottleneck:</strong> Validating Augmented Reality (AR) systems requires precise, repeatable ground-truth motion. While human testing is essential, natural biomechanical variability (tremors and fatigue) makes it impossible for users to perfectly replicate motions across multiple trials. This inconsistency creates a debugging dilemma: when an AR tracking algorithm glitches, is it a software flaw or just an erratic human movement?
+          </p>
+          <p>
+            <strong>The ARBot Solution:</strong> We introduce <strong>ARBot</strong>, a real-time teleoperation framework that translates unpredictable human motion into highly repeatable robotic execution. By acting as a deterministic physical proxy, ARBot completely isolates algorithm performance from human inconsistency. 
+          </p>
+          <p>Our open-source platform features:</p>
+          <ul>
+            <li><strong>Multimodal Capture:</strong> Natural 6-DOF tracking via a mobile AR app, or highly-stable tracking via a custom CV+IMU pipeline.</li>
+            <li><strong>Proactively-Safe Control:</strong> A custom QP controller that filters out human jitter, achieving up to a <strong>10.2x reduction in human motion variability</strong> and a <strong>~5mm median tracking accuracy</strong>.</li>
+            <li><strong>Benchmark Dataset:</strong> A collection of 132 human and synthetic trajectories to accelerate controllable, scalable AR testing.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!--/ Consolidated Abstract & Motivation -->
+  </div>
+</section>
+
+<!-- HOW ARBOT WORKS SECTION (NEW) -->
+<section class="section is-light" style="padding-bottom: 1.5rem;">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">How ARBot Works</h2>
+    
+    <!-- 3-Step Visual Pipeline -->
+    <div class="columns is-centered has-text-centered mt-5">
+      <div class="column">
+        <span class="icon is-large has-text-info mb-2">
+          <i class="fas fa-3x fa-video"></i>
+        </span>
+        <h3 class="title is-5 mb-2">1. Capture</h3>
+        <p class="is-size-6 has-text-grey-dark">User intent is captured via natural 6-DOF tracking (ARPose App) or high-precision Depth Camera + IMU sensors.</p>
+      </div>
+      <div class="column">
+        <span class="icon is-large has-text-info mb-2">
+          <i class="fas fa-3x fa-microchip"></i>
+        </span>
+        <h3 class="title is-5 mb-2">2. Process</h3>
+        <p class="is-size-6 has-text-grey-dark">A ROS2 backend applies Kalman filtering and a QP Controller to remove human tremor and solve inverse kinematics.</p>
+      </div>
+      <div class="column">
+        <span class="icon is-large has-text-info mb-2">
+          <i class="fas fa-3x fa-robot"></i>
+        </span>
+        <h3 class="title is-5 mb-2">3. Execute</h3>
+        <p class="is-size-6 has-text-grey-dark">The PIPER arm faithfully replays the smoothed motion with <strong>~5mm median accuracy</strong> via the CAN Bus protocol.</p>
+      </div>
+    </div>
+
+    <!-- Architecture Diagrams -->
+    <div class="columns is-centered mt-6">
+      <div class="column is-full-width">
+        <div class="columns is-vcentered">
+          <div class="column is-one-third has-text-centered">
+            <!-- IMPORTANT: Export fig1.pdf as fig1.png and place it in the static/images folder -->
+            <img src="./static/images/fig1.png" alt="ARBot Hardware Setup" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p class="is-size-7 mt-3"><strong>Hardware Setup:</strong> PIPER Arm, ARPose, Depth Camera, and IMU.</p>
+          </div>
+          <div class="column is-two-thirds has-text-centered">
+            <!-- IMPORTANT: Export fig2.pdf as fig2.png and place it in the static/images folder -->
+            <img src="./static/images/fig2.png" alt="ARBot System Architecture" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p class="is-size-7 mt-3"><strong>System Architecture:</strong> Raw capture data is filtered and solved via ROS2 (Kalman Filter + QSQP) before robot execution.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+<!-- / HOW ARBOT WORKS SECTION -->
+
+<section class="section" style="padding-top: 1.5rem;">
+  <div class="container is-max-desktop">
+
+    <!-- Our Capture Systems -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Our Capture Systems</h2>
+      </div>
+    </div>
+
+    <div class="columns is-desktop">
+      <!-- ARPose App Card -->
+      <div class="column is-half">
+        <div class="box" style="height: 100%; display: flex; flex-direction: column;">
+          <h3 class="title is-4 has-text-centered">ARPose App</h3>
+          <div class="content has-text-justified" style="flex-grow: 1;">
+            <p>
+              The ARPose app leverages Google's ARCore for natural 6-DOF tracking, offering an intuitive, plug-and-play user experience. ARPose is much easier to deploy and better captures the flexible, unconstrained hand motions typical of everyday AR users.
+            </p>
+          </div>
+          <video id="arpose-video" autoplay controls muted loop playsinline style="width: 100%; border-radius: 8px;">
+            <source src="./static/videos/arpose_demo.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <!-- CV+IMU Setup Card -->
+      <div class="column is-half">
+        <div class="box" style="height: 100%; display: flex; flex-direction: column;">
+          <h3 class="title is-4 has-text-centered">CV+IMU Setup</h3>
+          <div class="content has-text-justified" style="flex-grow: 1;">
+            <p>
+              The CV+IMU setup combines an Intel RealSense L515 LiDAR Depth Camera with a wearable inertial sensor (MPU-9250) to capture highly stable, precise wrist movements. High-frequency 200Hz IMU data acts as a safety net during transient visual tracking drops.
+            </p>
+          </div>
+          <video id="cv_demo-video" autoplay controls muted loop playsinline style="width: 100%; border-radius: 8px;">
+            <source src="./static/videos/cv_demo.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    <!--/ Our Capture Systems -->
+
+    <br><br>
+
+    <!-- Interactive Benchmark Animation -->
+    <div class="columns is-centered has-text-centered"></div>
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">High-Fidelity Tracking Alignment</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            Watch the trajectories below playing in real-time. The top row shows 3 raw human trajectories characterized by natural tremor and drift (averaging ~75mm of variance). The bottom row demonstrates ARBot's 5 robotic executions specifically tasked with mimicking the exact intended path of the first human trajectory (Human trial 1). By reducing human Inter-Trial Variability (ITV) by up to <strong>10.2x</strong>, ARBot achieves an unprecedented <strong>~5.0 mm median Absolute Trajectory Error (ATE)</strong> compared to the source motion. All plots share the identical absolute scale.
+          </p>
+        </div>
+        
+        <div class="columns is-centered">
+          <div class="column is-12">
+            
+            <!-- Data Warning Notification -->
+            <div id="data-warning" class="notification is-warning is-light" style="display: none; padding: 0.5rem 1rem; margin-bottom: 1rem; text-align: center; border-radius: 8px;">
+              <strong>Note:</strong> Currently displaying <em>simulated</em> fallback data. 
+              <br><span id="data-error-text" style="font-size: 0.9em; color: #b71c1c; font-weight: bold;"></span>
+              <br>To render your actual dataset, make sure your files are correctly placed and you are running a local web server (e.g., <code>python -m http.server</code>).
+            </div>
+
+            <!-- Dynamic Data Source Badge -->
+            <div class="has-text-centered mb-4">
+                <span class="tag is-medium is-dark">Data Source:</span>
+                <span id="data-status-badge" class="tag is-medium is-light is-info">Loading...</span>
+            </div>
+
+            <!-- Playback Controls Container -->
+            <div class="has-text-centered mb-4 is-flex is-justify-content-center is-align-items-center" style="gap: 15px; flex-wrap: wrap;">
+                <div class="buttons has-addons mb-0">
+                    <button class="button is-small is-light speed-btn" data-speed="1">0.5x</button>
+                    <button class="button is-small is-info speed-btn" data-speed="2">1x</button>
+                    <button class="button is-small is-light speed-btn" data-speed="4">2x</button>
+                </div>
+            </div>
+
+            <div id="trajectory-grid-container">
+                <!-- 5x2 Grid Layout for Plots -->
+                <!-- ROW 1: Humans (Centered 3 columns) -->
+                <div class="columns is-desktop is-centered mb-2 is-variable is-1">
+                    <div class="column is-one-fifth"></div>
+                    <div class="column is-one-fifth has-text-centered">
+                        <div class="grid-title has-text-danger">Human trial 1</div>
+                        <div id="plot-h1" class="plot-container"></div>
+                    </div>
+                    <div class="column is-one-fifth has-text-centered">
+                        <div class="grid-title has-text-danger">Human trial 2</div>
+                        <div id="plot-h2" class="plot-container"></div>
+                    </div>
+                    <div class="column is-one-fifth has-text-centered">
+                        <div class="grid-title has-text-danger">Human trial 3</div>
+                        <div id="plot-h3" class="plot-container"></div>
+                    </div>
+                    <div class="column is-one-fifth"></div>
+                </div>
+
+                <!-- ROW 2: Robots (All 5 columns) -->
+                <div class="columns is-desktop is-centered mt-2 is-variable is-1">
+                    <div class="column is-one-fifth has-text-centered">
+                        <div class="grid-title has-text-info">Robot trial 1</div>
+                        <div id="plot-r1" class="plot-container"></div>
+                    </div>
+                    <div class="column is-one-fifth has-text-centered">
+                        <div class="grid-title has-text-info">Robot trial 2</div>
+                        <div id="plot-r2" class="plot-container"></div>
+                    </div>
+                    <div class="column is-one-fifth has-text-centered">
+                        <div class="grid-title has-text-info">Robot trial 3</div>
+                        <div id="plot-r3" class="plot-container"></div>
+                    </div>
+                    <div class="column is-one-fifth has-text-centered">
+                        <div class="grid-title has-text-info">Robot trial 4</div>
+                        <div id="plot-r4" class="plot-container"></div>
+                    </div>
+                    <div class="column is-one-fifth has-text-centered">
+                        <div class="grid-title has-text-info">Robot trial 5</div>
+                        <div id="plot-r5" class="plot-container"></div>
+                    </div>
+                </div>
+            </div>
+            
+          </div>
+        </div>
+        <br/>a
+      </div>
+    </div>
+    <!--/ Interactive Benchmark Animation -->
+
+  </div>
+</section>
+
+<!-- HOW TO USE SECTION (UPDATED 2x2 LAYOUT) -->
+<section class="section is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">How can the community use ARBot?</h2>
+        <div class="content has-text-justified">
+          <p>
+            ARBot is designed as a modular toolkit rather than a monolithic project. Depending on your laboratory's available hardware, here are four strategic ways the community can leverage our pipelines and datasets for advanced research:
+          </p>
+        </div>
+        
+        <!-- 2x2 Grid Layout -->
+        <div class="columns is-desktop is-multiline mt-4">
+          
+          <!-- Card 1: ML & AI (No Hardware) -->
+          <div class="column is-half">
+            <div class="box" style="height: 100%;">
+              <h3 class="title is-4 has-text-centered"><span class="icon has-text-info"><i class="fas fa-network-wired"></i></span> Machine Learning & Prediction</h3>
+              <h4 class="subtitle is-6 is-uppercase has-text-weight-bold has-text-info mt-2 has-text-centered">Algorithm Validation via Raw Datasets</h4>
+              <div class="content has-text-justified">
+                <p>
+                  Skip physical hardware setup entirely. Inject our open-source dataset of 132 trajectories directly into PyTorch, MATLAB, or Gazebo as raw motion inputs.
+                </p>
+                <p>
+                  Featuring distinct topological patterns (squares, circles, "S" shapes), this dataset provides robust, varied kinematic behaviors (sharp corners, continuous curves) to rigorously train self-supervised intent-prediction networks or validate novel smoothing algorithms purely in simulation.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Card 2: CV & AR (Robot Only) -->
+          <div class="column is-half">
+            <div class="box" style="height: 100%;">
+              <h3 class="title is-4 has-text-centered"><span class="icon has-text-info"><i class="fas fa-vr-cardboard"></i></span> CV & Spatial Computing</h3>
+              <h4 class="subtitle is-6 is-uppercase has-text-weight-bold has-text-info mt-2 has-text-centered">Sim-to-Real SLAM Degradation Profiling</h4>
+              <div class="content has-text-justified">
+                <p>
+                  Utilize ARBot's execution arm in autonomous "repeatable mode" to push AR headsets and vision sensors to their absolute algorithmic limits.
+                </p>
+                <p>
+                  By mounting tracking hardware directly to the end-effector, researchers can repeatedly execute zero-drift trajectories at varying speeds or under dynamic lighting conditions. This perfectly isolates algorithmic failure (SLAM/VIO drift) from human error during stress tests.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: HCI (Capture Only) -->
+          <div class="column is-half">
+            <div class="box" style="height: 100%;">
+              <h3 class="title is-4 has-text-centered"><span class="icon has-text-info"><i class="fas fa-users"></i></span> Human-Computer Interaction</h3>
+              <h4 class="subtitle is-6 is-uppercase has-text-weight-bold has-text-info mt-2 has-text-centered">High-Fidelity Biomechanical Analysis</h4>
+              <div class="content has-text-justified">
+                <p>
+                  Deploy our multimodal capture interfaces (ARPose or CV+IMU) entirely independently of the robotic manipulator for robust human-subject studies.
+                </p>
+                <p>
+                  By logging micro-level spatial data (position, orientation, timestamp) during complex 3D tasks, HCI researchers can quantitatively assess Extended Reality (XR) interface designs, effectively isolating biomechanical fatigue and jitter from cognitive workload constraints.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Control Theory (Full Setup) -->
+          <div class="column is-half">
+            <div class="box" style="height: 100%;">
+              <h3 class="title is-4 has-text-centered"><span class="icon has-text-info"><i class="fas fa-robot"></i></span> Advanced Robotics & Control</h3>
+              <h4 class="subtitle is-6 is-uppercase has-text-weight-bold has-text-info mt-2 has-text-centered">Latency-Tolerant Proactive Safety</h4>
+              <div class="content has-text-justified">
+                <p>
+                  Leverage the complete end-to-end hardware and ROS2 software stack to prototype high-stakes, real-world remote manipulation (e.g., medical robotics).
+                </p>
+                <p>
+                  Researchers can deliberately inject artificial network delays into the teleoperation pipeline to stress-test the custom QSQP controller, pioneering new mathematical methods for proactive obstacle avoidance and real-time human intent translation under severe latency.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- / HOW TO USE SECTION -->
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Paper video. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video Presentation</h2>
+        <div class="publication-video">
+          <iframe src="https://drive.google.com/file/d/1p1yWvTnUCi8EVE35_17QYnNGMlxb-_Ru/preview"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+    <!--/ Paper video. -->
+  </div>
+</section>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{10.1145/3793853.3799807,
+author = {Chhajed, Harsh and Guo, Tian},
+title = {ARBot: A High-Fidelity Robotic Manipulator Teleoperation Framework for Human-Centered Augmented Reality Evaluation},
+year = {2026},
+isbn = {9798400724817},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3793853.3799807},
+doi = {10.1145/3793853.3799807},
+abstract = {Validating Augmented Reality (AR) tracking and interaction models requires precise, repeatable ground-truth motion. However, human users cannot reliably perform consistent motion due to biome-chanical variability. Robotic manipulators are promising to act as human motion proxies if they can mimic human movements. In this work, we design and implement ARBot, a real-time teleoperation platform that can effectively capture natural human motion and accurately replay the movements via robotic manipulators. ARBot includes two capture models: stable wrist motion capture via a custom CV and IMU pipeline, and natural 6-DOF control via a mobile application. We design a proactively-safe QP controller to ensure smooth, jitter-free execution of the robotic manipulator, enabling it to function as a high-fidelity record and replay physical proxy. We open-source ARBot and release a benchmark dataset of 132 human and synthetic trajectories captured using ARBot to support controllable and scalable AR evaluation.},
+booktitle = {Proceedings of the ACM Multimedia Systems Conference 2026},
+pages = {409–415},
+numpages = {7},
+keywords = {Augmented Reality, Robot Teleoperation, Human-Robot Interaction},
+location = {
+},
+series = {MMSys '26}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./ARBot_MMSys_2026.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/YOUR_REPO" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            Website source code based on the <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> project page. If you want to reuse their source code, please credit them appropriately.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Interactive Trajectory Visualization Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", async function() {
+        
+        let humans = [];
+        let robots = [];
+        let maxLength = 0;
+
+        // Smart Function to load CSV from multiple possible paths
+        async function loadCSV(filename, isRobot) {
+            if (window.location.protocol === 'blob:' || window.location.protocol === 'data:') {
+                throw new Error("Preview environment cannot fetch local files. Please run a local web server.");
+            }
+
+            const possiblePaths = [
+                `/static/dataset/${filename}`,
+                `./static/dataset/${filename}`,
+                `../static/dataset/${filename}`,
+                `./dataset/${filename}`,
+                `../dataset/${filename}`,
+                `./${filename}`
+            ];
+            
+            let text = null;
+            let lastError = "";
+
+            for (let path of possiblePaths) {
+                try {
+                    // Check if URL is valid to construct before fetching. 
+                    // This silences strict browser errors in blob/data preview environments
+                    try { 
+                        const testUrl = new URL(path, window.location.href);
+                        if (testUrl.protocol === 'blob:' || testUrl.protocol === 'data:') {
+                            throw new Error("Relative fetch blocked in blob origin");
+                        }
+                    } catch (urlError) {
+                        throw urlError;
+                    }
+
+                    const response = await fetch(path);
+                    if (response.ok) {
+                        text = await response.text();
+                        break; 
+                    } else {
+                        lastError = `HTTP ${response.status} at ${path}`;
+                    }
+                } catch (e) {
+                    lastError = e.message; 
+                }
+            }
+
+            // Return null instead of throwing an unhandled rejection
+            if (!text) {
+                console.warn(`Could not load ${filename}. Reason: ${lastError}`);
+                return null;
+            }
+
+            const lines = text.trim().split('\n');
+            const headers = lines[0].trim().split(',');
+            
+            const yIndex = headers.indexOf(isRobot ? 'kinematic_pos_y' : 'target_pos_y');
+            const zIndex = headers.indexOf(isRobot ? 'kinematic_pos_z' : 'target_pos_z');
+
+            if (yIndex === -1 || zIndex === -1) {
+                console.warn(`Could not find expected coordinate columns in ${filename}`);
+                return null;
+            }
+
+            const pts = [];
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if(!line) continue; 
+                
+                const cols = line.split(',');
+                const yVal = parseFloat(cols[yIndex]);
+                const zVal = parseFloat(cols[zIndex]);
+                
+                if (!isNaN(yVal) && !isNaN(zVal)) {
+                    pts.push({
+                        y: yVal * 1000, // Convert to mm
+                        z: zVal * 1000
+                    });
+                }
+            }
+            return pts;
+        }
+
+        // Resample array to ensure synchronization across plots
+        function resample(path, targetLength) {
+            const resampled = [];
+            for(let i=0; i<targetLength; i++) {
+                const t = i / (targetLength - 1);
+                const indexFloat = t * (path.length - 1);
+                const indexInt = Math.floor(indexFloat);
+                const fraction = indexFloat - indexInt;
+
+                if (indexInt >= path.length - 1) {
+                    resampled.push(path[path.length - 1]);
+                } else {
+                    const p1 = path[indexInt];
+                    const p2 = path[indexInt + 1];
+                    resampled.push({
+                        y: p1.y + (p2.y - p1.y) * fraction,
+                        z: p1.z + (p2.z - p1.z) * fraction
+                    });
+                }
+            }
+            return resampled;
+        }
+
+        try {
+            const results = await Promise.all([
+                loadCSV('H1.csv', false),
+                loadCSV('H2.csv', false),
+                loadCSV('H3.csv', false),
+                loadCSV('robot_1.csv', true),
+                loadCSV('robot_2.csv', true),
+                loadCSV('robot_3.csv', true),
+                loadCSV('robot_4.csv', true),
+                loadCSV('robot_5.csv', true)
+            ]);
+
+            // Cleanly check for failures without causing UNHANDLEDREJECTION
+            if (results.some(r => r === null)) {
+                throw new Error("One or more files failed to load. Initiating procedural fallback.");
+            }
+
+            const loadedHumans = results.slice(0, 3);
+            const loadedRobots = results.slice(3);
+
+            loadedHumans.forEach(p => maxLength = Math.max(maxLength, p.length));
+            loadedRobots.forEach(p => maxLength = Math.max(maxLength, p.length));
+
+            humans = loadedHumans.map(p => resample(p, maxLength));
+            robots = loadedRobots.map(p => resample(p, maxLength));
+
+            const warningEl = document.getElementById('data-warning');
+            if(warningEl) warningEl.style.display = 'none';
+            
+            const badgeEl = document.getElementById('data-status-badge');
+            if(badgeEl) {
+                badgeEl.textContent = 'User study logs';
+                badgeEl.classList.remove('is-info', 'is-light');
+                badgeEl.classList.add('is-success');
+            }
+
+        } catch (error) {
+            console.warn("Using simulated fallback data.", error.message);
+            
+            const warningEl = document.getElementById('data-warning');
+            if(warningEl) {
+                warningEl.style.display = 'block';
+                document.getElementById('data-error-text').textContent = "Debug Info: " + error.message;
+            }
+            
+            const badgeEl = document.getElementById('data-status-badge');
+            if(badgeEl) {
+                badgeEl.textContent = 'Simulated Data';
+                badgeEl.classList.remove('is-info', 'is-light');
+                badgeEl.classList.add('is-warning');
+            }
+            
+            function generateSquareBase() {
+                let pts = [];
+                for(let i=0; i<30; i++) pts.push({y: -50 + (100/30)*i, z: -50});
+                for(let i=0; i<30; i++) pts.push({y: 50, z: -50 + (100/30)*i});
+                for(let i=0; i<30; i++) pts.push({y: 50 - (100/30)*i, z: 50});
+                for(let i=0; i<30; i++) pts.push({y: -50, z: 50 - (100/30)*i});
+                pts.push({y: -50, z: -50}); 
+                return pts;
+            }
+
+            function generateHumanPath(base) {
+                let offsetY = (Math.random() - 0.5) * 30;
+                let offsetZ = (Math.random() - 0.5) * 30;
+                let driftY = 0, driftZ = 0;
+                let path = base.map(pt => {
+                    driftY += (Math.random() - 0.5) * 5;
+                    driftZ += (Math.random() - 0.5) * 5;
+                    return { y: pt.y + offsetY + driftY + (Math.random()-0.5)*10, z: pt.z + offsetZ + driftZ + (Math.random()-0.5)*10 };
+                });
+                for(let j=0; j<4; j++) {
+                    let temp = [];
+                    for(let i=0; i<path.length; i++) {
+                        let prev = path[i===0 ? path.length-1 : i-1], curr = path[i], next = path[(i+1)%path.length];
+                        temp.push({ y: prev.y*0.25 + curr.y*0.5 + next.y*0.25, z: prev.z*0.25 + curr.z*0.5 + next.z*0.25 });
+                    }
+                    path = temp;
+                }
+                return path;
+            }
+
+            function generateRobotPath(base) {
+                return base.map(pt => ({ y: pt.y + (Math.random() - 0.5) * 1.5, z: pt.z + (Math.random() - 0.5) * 1.5 }));
+            }
+
+            const baseSquare = generateSquareBase();
+            humans = [generateHumanPath(baseSquare), generateHumanPath(baseSquare), generateHumanPath(baseSquare)];
+            robots = [generateRobotPath(baseSquare), generateRobotPath(baseSquare), generateRobotPath(baseSquare), generateRobotPath(baseSquare), generateRobotPath(baseSquare)];
+            maxLength = humans[0].length;
+        }
+
+        const baseHumanColor = 'rgba(231, 76, 60, 0.85)'; // Red
+        const baseRobotColor = 'rgba(52, 152, 219, 0.85)'; // Blue
+        
+        // Dynamically calculate bounding box to perfectly frame the data
+        let allY = [], allZ = [];
+        humans.forEach(h => { allY.push(...h.map(p => p.y)); allZ.push(...h.map(p => p.z)); });
+        robots.forEach(r => { allY.push(...r.map(p => p.y)); allZ.push(...r.map(p => p.z)); });
+
+        let minY = Math.min(...allY) - 10, maxY = Math.max(...allY) + 10;
+        let minZ = Math.min(...allZ) - 10, maxZ = Math.max(...allZ) + 10;
+        
+        let rangeY = maxY - minY;
+        let rangeZ = maxZ - minZ;
+        let maxRange = Math.max(rangeY, rangeZ); 
+        let midY = (minY + maxY) / 2;
+        let midZ = (minZ + maxZ) / 2;
+
+        const commonLayout = {
+            xaxis: { range: [midY - maxRange/2, midY + maxRange/2], zeroline: false, showgrid: false, showticklabels: false },
+            yaxis: { range: [midZ - maxRange/2, midZ + maxRange/2], zeroline: false, showgrid: false, showticklabels: false, scaleanchor: 'x', scaleratio: 1 },
+            margin: { l: 5, r: 5, b: 5, t: 5 }, 
+            showlegend: false,
+            plot_bgcolor: '#fcfcfc',
+            paper_bgcolor: 'rgba(0,0,0,0)'
+        };
+
+        // Initialize Plotly instances in the grid
+        for(let i=0; i<3; i++) {
+            Plotly.newPlot(`plot-h${i+1}`, [{ x: [], y: [], mode: 'lines', line: { color: baseHumanColor, width: 3 }, hoverinfo: 'none' }], commonLayout, {staticPlot: true});
+        }
+        for(let i=0; i<5; i++) {
+            Plotly.newPlot(`plot-r${i+1}`, [{ x: [], y: [], mode: 'lines', line: { color: baseRobotColor, width: 3 }, hoverinfo: 'none' }], commonLayout, {staticPlot: true});
+        }
+
+        // Animation Core Variables
+        let currentIndex = 0;
+        let pointsPerFrame = 2; // Default 1x playback speed
+        
+        // Speed Control Logic
+        const speedButtons = document.querySelectorAll('.speed-btn');
+        speedButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                speedButtons.forEach(b => { b.classList.remove('is-info'); b.classList.add('is-light'); });
+                e.target.classList.remove('is-light');
+                e.target.classList.add('is-info');
+                pointsPerFrame = parseInt(e.target.getAttribute('data-speed'));
+            });
+        });
+
+        // Main Animation Loop
+        function renderFrame() {
+            if (currentIndex === 0) {
+                // Clear all traces visually when looping back to start
+                for(let i=1; i<=3; i++) Plotly.update(`plot-h${i}`, {x:[[]], y:[[]]});
+                for(let i=1; i<=5; i++) Plotly.update(`plot-r${i}`, {x:[[]], y:[[]]});
+            }
+
+            let endIdx = Math.min(currentIndex + pointsPerFrame, maxLength);
+
+            if (currentIndex < endIdx) {
+                // Extend human traces
+                for(let i=0; i<3; i++) {
+                    let xs = humans[i].slice(currentIndex, endIdx).map(p=>p.y);
+                    let ys = humans[i].slice(currentIndex, endIdx).map(p=>p.z);
+                    if(xs.length > 0) Plotly.extendTraces(`plot-h${i+1}`, {x: [xs], y: [ys]}, [0]);
+                }
+                
+                // Extend robot traces
+                for(let i=0; i<5; i++) {
+                    let xs = robots[i].slice(currentIndex, endIdx).map(p=>p.y);
+                    let ys = robots[i].slice(currentIndex, endIdx).map(p=>p.z);
+                    if(xs.length > 0) Plotly.extendTraces(`plot-r${i+1}`, {x: [xs], y: [ys]}, [0]);
+                }
+            }
+
+            currentIndex = endIdx;
+
+            if (currentIndex >= maxLength) {
+                setTimeout(() => {
+                    currentIndex = 0;
+                    requestAnimationFrame(renderFrame);
+                }, 1500); 
+            } else {
+                requestAnimationFrame(renderFrame); 
+            }
+        }
+
+        // Kick off the initial animation safely
+        requestAnimationFrame(renderFrame);
+
+    });
+</script>
+
+</body>
+</html>

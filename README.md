@@ -1,12 +1,15 @@
 # ARBot Project Website
 
-This repository contains the source code for the ARBot project website. 
+This repository contains the HTML, CSS, and interactive visualization code for the ARBot project website. 
+
+**Looking for the actual code or data?**
+* 💻 **Codebase:** The ROS2 backend, QP controller, and capture interfaces can be found in the [Main ARBot Code Repository](https://github.com/cake-lab/ARBot).
+* 📊 **Dataset:** The open-source 132-trajectory benchmark dataset can be downloaded [Here](https://drive.google.com/drive/folders/1G7c1eUC-Iz520lqaE077X5Flvq8blLnZ?usp=drive_link).
 
 ARBot is a real-time teleoperation framework that translates unpredictable human motion into highly repeatable robotic execution, acting as a deterministic physical proxy for Augmented Reality (AR) tracking and interaction evaluation.
 
 ### Citation
 If you find the ARBot framework or our 132-trajectory benchmark dataset useful for your work, please cite our paper:
-
 ```bibtex
 @inproceedings{10.1145/3793853.3799807,
 author = {Chhajed, Harsh and Guo, Tian},
